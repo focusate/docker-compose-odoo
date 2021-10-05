@@ -1,0 +1,57 @@
+---
+version: "3.9"
+
+x-common-variables: &common-variables
+  POSTGRES_DB: postgres
+  POSTGRES_USER: odoo
+  POSTGRES_PORT: 5432
+  POSTGRES_PASSWORD_FILE: /tmp/POSTGRES_PASSWORD_FILE
+
+services:
+  odoo:
+    image: focusate/odoo:latest
+    depends_on:
+      - db
+    volumes:
+      - odoo-filestore:/opt/odoo/data
+      - type: bind
+        source:
+          ./.secrets/odoo.override.conf
+        target:
+          /etc/odoo/odoo.override.conf
+      - type: bind
+        source: ./.secrets/POSTGRES_PASSWORD_FILE
+        target: /tmp/POSTGRES_PASSWORD_FILE
+    environment: *common-variables
+    networks:
+      - backend
+      - frontend
+  db:
+    image: postgres:13
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data
+      - type: bind
+        source: ./.secrets/POSTGRES_PASSWORD_FILE
+        target: /tmp/POSTGRES_PASSWORD_FILE
+    environment: *common-variables
+    networks:
+      - backend
+  web:
+    image: focusate/nginx:latest
+    ports:
+      - 443:443
+    volumes:
+      - ./.secrets/domain.bundle.crt:/etc/ssl/nginx/domain.bundle.crt
+      - ./.secrets/domain.key:/etc/ssl/nginx/domain.key
+    networks:
+      - frontend
+
+volumes:
+  odoo-db-data:
+    driver: local
+  odoo-filestore:
+    driver: local
+
+networks:
+  backend:
+  frontend:

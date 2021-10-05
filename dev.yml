@@ -1,0 +1,11 @@
+---
+version: "3.9"
+services:
+  odoo:
+    ports:
+      - 8069:8069
+  web:
+    # Using dummy image (that is very small) to basically do nothing
+    # instead of running nginx.
+    # Comment web part here if you actually need to run nginx.
+    image: tianon/true
