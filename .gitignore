@@ -1,2 +1,3 @@
 .secrets/
 docker-compose.override.yml
+.env
