@@ -2,5 +2,4 @@
 version: "3.9"
 services:
   odoo:
-    # TODO: 14.0-stable tag does not exist yet.
-    image: focusate/odoo:14.0-stable
+    image: focusate/odoo:15.0-stable

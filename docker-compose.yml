@@ -9,7 +9,7 @@ x-common-variables: &common-variables
 
 services:
   odoo:
-    image: focusate/odoo:latest
+    image: focusate/15.0
     depends_on:
       - db
     volumes:
